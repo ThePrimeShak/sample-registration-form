@@ -5,7 +5,8 @@
 
 import { debounce } from '@/utils/debounce.js'
 export default {
-  props: { userInfo: Object },
+  props: { userInfo: Object, modelValue: { type: String, default: '' } },
+  emits: ['update:modelValue'],
   data() {
     return {
       textMessage: ''
@@ -52,6 +53,11 @@ export default {
       else if (!this.textMessage) this.textMessage = balancedMessage
     },
 
+    handleInput(event) {
+      this.$emit('update:modelValue', event.target.value)
+      this.descriptionInput(event)
+    },
+
     descriptionInput() {}
   },
 
@@ -64,19 +70,33 @@ export default {
 </script>
 
 <template>
-  <div class="mx-auto flex w-full max-w-96 flex-col">
-    <p class="text-base text-white sm:text-xl">
-      Username:
-      <span class="font-bold">{{ userInfo ? userInfo.username : '' }}</span>
-    </p>
-    <p class="text-base text-white sm:text-xl">
-      Email:
-      <span class="font-bold">{{ userInfo ? userInfo.email : '' }}</span>
-    </p>
-
-    <div class="mt-2">
-      <input id="description" class="input w-full" @input="descriptionInput" />
-      <div v-if="textMessage">{{ textMessage }}</div>
+  <div class="review-content">
+    <div class="review-details"
+      ><p
+        >Username: <strong>{{ userInfo ? userInfo.username : '' }}</strong></p
+      ><p
+        >Email: <strong>{{ userInfo ? userInfo.email : '' }}</strong></p
+      ></div
+    >
+    <div class="field-group">
+      <label for="description">A little about you <span class="optional">(optional)</span></label>
+      <input
+        id="description"
+        name="description"
+        class="input"
+        placeholder="Something you’d like to share…"
+        :value="modelValue"
+        aria-describedby="description-hint description-status"
+        @input="handleInput"
+      />
+      <p id="description-hint" class="field-hint">We’ll check that any brackets in your text are balanced.</p>
+      <p
+        id="description-status"
+        class="balance-message"
+        :class="{ 'field-error': textMessage === 'The text is not balanced.' }"
+        role="status"
+        >{{ textMessage }}</p
+      >
     </div>
   </div>
 </template>

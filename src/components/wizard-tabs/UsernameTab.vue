@@ -1,27 +1,27 @@
-<script setup lang="js">
-defineProps({
-  error: {
-    type: String,
-    required: false,
-    default: ''
-  },
-  valid: {
-    type: String,
-    required: false,
-    default: ''
-  }
-})
-
+<script setup>
+defineProps({ error: { type: String, default: '' } })
 const username = defineModel({ type: String, required: true })
 </script>
 
 <template>
-  <div class="mx-auto flex w-full max-w-96 flex-col">
-    <label for="username" class="mb-2 text-lg text-white">Username:</label>
-    <input v-model="username" id="username" name="username" autofocus class="input" type="text" />
-    <Transition name="fade-preset" mode="out-in">
-      <p v-if="error" class="mt-1 text-sm text-red-500">{{ error }}</p>
-      <p v-else-if="valid" class="mt-1 text-sm text-green-500">{{ valid }}</p>
-    </Transition>
+  <div class="field-group">
+    <label for="username">Username:</label>
+    <div class="input-wrap"
+      ><span class="input-symbol" aria-hidden="true">@</span
+      ><input
+        v-model="username"
+        id="username"
+        name="username"
+        class="input with-symbol"
+        type="text"
+        autocomplete="username"
+        autocapitalize="none"
+        spellcheck="false"
+        placeholder="e.g. primeshak"
+        :aria-invalid="!!error"
+        aria-describedby="username-hint username-error"
+    /></div>
+    <p id="username-hint" class="field-hint">4–15 characters. Letters, numbers, and underscores.</p>
+    <p id="username-error" class="field-error" role="alert">{{ error }}</p>
   </div>
 </template>

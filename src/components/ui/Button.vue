@@ -21,17 +21,3 @@ defineProps({
     <slot />
   </button>
 </template>
-
-<style scoped lang="css">
-.button {
-  @apply min-w-16 rounded-full px-2 py-2 text-sm font-bold text-white outline-none transition-all sm:px-5 sm:py-3 sm:text-base;
-}
-
-.button.primary {
-  @apply bg-secondary   disabled:bg-secondary-400 [&:not([disabled])]:hover:bg-secondary-700;
-}
-
-.button.outline {
-  @apply border-2 border-secondary  [&:not([disabled])]:hover:bg-secondary;
-}
-</style>
