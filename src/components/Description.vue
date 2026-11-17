@@ -1,85 +1,55 @@
 <script>
-// why optional API?
-// the test was written in a different way
-// (methods does not exposed to use in Description test file)
-
 import { debounce } from '@/utils/debounce.js'
+import { isBalancedText } from '@/utils/isBalancedText.js'
+
 export default {
-  props: { userInfo: Object, modelValue: { type: String, default: '' } },
+  props: {
+    userInfo: { type: Object, default: () => ({ username: '', email: '' }) },
+    modelValue: { type: String, default: '' }
+  },
   emits: ['update:modelValue'],
   data() {
-    return {
-      textMessage: ''
-    }
+    return { textMessage: '', debouncedCheck: null }
+  },
+  created() {
+    this.debouncedCheck = debounce((value) => this.isBalanced(value), 1000)
+    if (this.modelValue) this.isBalanced(this.modelValue)
+  },
+  beforeUnmount() {
+    this.debouncedCheck.cancel()
   },
   methods: {
+    // Keep the public method used by the existing component tests.
     isBalanced(text) {
-      const balancedMessage = 'The text is balanced.'
-      const unBalancedMessage = 'The text is not balanced.'
-
-      this.textMessage = ''
-      const stack = []
-
-      for (let i = 0; i < text.length; i++) {
-        const char = text.charAt(i)
-
-        if (char === '{' || char === '(' || char === '[') {
-          stack.push(char)
-        } else if (char === ']') {
-          if (stack[stack.length - 1] != '[' || stack.length === 0) {
-            this.textMessage = unBalancedMessage
-            break
-          } else {
-            stack.pop()
-          }
-        } else if (char === ')') {
-          if (stack.length === 0 || stack[stack.length - 1] != '(') {
-            this.textMessage = unBalancedMessage
-            break
-          } else {
-            stack.pop()
-          }
-        } else if (char === '}') {
-          if (stack[stack.length - 1] != '{' || stack.length === 0) {
-            this.textMessage = unBalancedMessage
-            break
-          } else {
-            stack.pop()
-          }
-        }
-      }
-
-      if (stack.length !== 0) this.textMessage = unBalancedMessage
-      else if (!this.textMessage) this.textMessage = balancedMessage
+      this.textMessage = isBalancedText(text) ? 'The text is balanced.' : 'The text is not balanced.'
     },
-
     handleInput(event) {
-      this.$emit('update:modelValue', event.target.value)
-      this.descriptionInput(event)
-    },
-
-    descriptionInput() {}
-  },
-
-  created() {
-    this.descriptionInput = debounce((event) => {
-      this.isBalanced(event.target.value)
-    }, 1000)
+      const value = event.target.value
+      this.$emit('update:modelValue', value)
+      this.textMessage = ''
+      this.debouncedCheck(value)
+    }
   }
 }
 </script>
 
 <template>
   <div class="review-content">
-    <div class="review-details"
-      ><p
-        >Username: <strong>{{ userInfo ? userInfo.username : '' }}</strong></p
-      ><p
-        >Email: <strong>{{ userInfo ? userInfo.email : '' }}</strong></p
-      ></div
-    >
+    <div class="review-details">
+      <p>
+        Username:
+        <strong>{{ userInfo.username }}</strong>
+      </p>
+      <p>
+        Email:
+        <strong>{{ userInfo.email }}</strong>
+      </p>
+    </div>
     <div class="field-group">
-      <label for="description">A little about you <span class="optional">(optional)</span></label>
+      <label for="description">
+        A little about you
+        <span class="optional">(optional)</span>
+      </label>
       <input
         id="description"
         name="description"
@@ -95,8 +65,9 @@ export default {
         class="balance-message"
         :class="{ 'field-error': textMessage === 'The text is not balanced.' }"
         role="status"
-        >{{ textMessage }}</p
       >
+        {{ textMessage }}
+      </p>
     </div>
   </div>
 </template>

@@ -3,7 +3,7 @@ import Wizard from '@/components/Wizard.vue'
 </script>
 
 <template>
-  <main class="w-full">
+  <main class="page-main w-full">
     <Wizard />
   </main>
 </template>

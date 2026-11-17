@@ -1,12 +1,19 @@
-export function debounce(fn, wait) {
+export function debounce(callback, delay) {
   let timer
-  return function (...args) {
-    if (timer) {
-      clearTimeout(timer) // clear any pre-existing timer
-    }
-    const context = this // get the current context
-    timer = setTimeout(() => {
-      fn.apply(context, args) // call the function if time expires
-    }, wait)
+
+  function cancel() {
+    clearTimeout(timer)
+    timer = undefined
   }
+
+  function debounced(...args) {
+    cancel()
+    timer = setTimeout(() => {
+      timer = undefined
+      callback.apply(this, args)
+    }, delay)
+  }
+
+  debounced.cancel = cancel
+  return debounced
 }

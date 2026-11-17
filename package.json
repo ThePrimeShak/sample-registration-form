@@ -10,7 +10,10 @@
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "test:unit": "cypress run --component",
-    "test:unit:dev": "cypress open --component"
+    "test:unit:dev": "cypress open --component",
+    "test:logic": "node --test tests/*.test.js",
+    "format": "prettier --write src tests README.md package.json",
+    "format:check": "prettier --check src tests README.md package.json"
   },
   "dependencies": {
     "vue": "^3.4.21",
