@@ -1,8 +1,29 @@
 # Registration Form
 
-A small, responsive Vue 3 registration wizard built with Vite and Tailwind CSS. It collects a username and email, then shows a review step with an optional description and a bracket-balance check.
+This repository is my implementation of a front-end take-home assignment completed as part of a job application. The brief asked for a three-step Vue 3 registration wizard, validation based on the supplied Cypress specifications, persistent values while moving between steps, and a `Description` component implemented from its tests.
+
+The result is a responsive Vue 3 application built with Vite and Tailwind CSS. It collects a username and email, then shows a review step with an optional description and a bracket-balance check.
 
 [Source code](https://github.com/ThePrimeShak/sample-registration-form) · [ThePrimeShak on LinkedIn](https://www.linkedin.com/in/theprimeshak/)
+
+## Assignment coverage
+
+| Requirement | Implementation |
+| --- | --- |
+| Three separate wizard steps | Username, email, and review are rendered one at a time. |
+| Step heading | Each screen displays `Step: username`, `Step: email`, or `Step: review`. |
+| Navigation controls | `#btn-prev` and `#btn-next` navigate between steps and are disabled at the first and last boundaries. |
+| Required input attributes | Username and email inputs retain the requested `id` and `name` attributes. |
+| Validation | Username and email rules match the supplied Cypress cases and prevent invalid navigation. |
+| Preserve entered values | Username, email, and description remain available while moving backward and forward. |
+| Description component | Balanced `()`, `[]`, and `{}` pairs are checked with a one-second debounce, including nested and mismatched cases. |
+| Vue 3 | The application uses Vue 3 with both Composition API and Options API where each fits the existing component contract. |
+| UI bonus | The supplied functionality is presented as a responsive Tailwind-based interface with accessible labels, errors, focus handling, and a 404 page. |
+| Supplied tests | The task-specific `Wizard.cy.js` and `Description.cy.js` specifications remain unchanged. Additional logic tests cover extracted state and utility code. |
+
+### Note about the Next button
+
+The written brief says Next should become active after the current input is filled, while the supplied tests click Next on an empty or invalid field and expect a validation message. The implementation follows the executable specification: Next stays available so validation feedback can be shown, invalid values cannot advance the wizard, and the button is disabled on the final step.
 
 ## Development
 
